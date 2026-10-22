@@ -4,36 +4,36 @@ const prisma = new PrismaClient();
 
 async function main() {
   const company = await prisma.company.upsert({
-    where: { id: 'company-default' },
+    where: { id: 'company-001' },
     update: {},
     create: {
-      id: 'company-default',
-      name: 'شركة الرؤية المالية',
-      taxNumber: '1234567890',
+      id: 'company-001',
+      name: 'شركة ميزان المحاسبة',
+      taxNumber: '0000000000',
       currency: 'SAR',
-      phone: '0550000000',
-      email: 'info@vision-finance.com',
-      address: 'الرياض - المملكة العربية السعودية',
+      phone: '0500000000',
+      email: 'info@mizan-accounting.com',
+      address: 'الرياض, السعودية',
     },
   });
 
   await prisma.user.upsert({
-    where: { email: 'admin@vision-finance.com' },
+    where: { email: 'admin@mizan-accounting.com' },
     update: {},
     create: {
       name: 'مدير النظام',
-      email: 'admin@vision-finance.com',
+      email: 'admin@mizan-accounting.com',
       password: '$2a$10$QhGITG5s4eJr2E6dHb7aSew7Ot1h8XsJc4YF8yH5Vg4y6pI0dQjQG',
       role: 'ADMIN',
       companyId: company.id,
     },
   });
 
-  const accountCash = await prisma.account.upsert({
-    where: { id: 'account-cash' },
+  const cash = await prisma.account.upsert({
+    where: { id: 'cash-001' },
     update: {},
     create: {
-      id: 'account-cash',
+      id: 'cash-001',
       name: 'الصندوق',
       code: '101',
       type: 'ASSET',
@@ -41,11 +41,11 @@ async function main() {
     },
   });
 
-  const accountSales = await prisma.account.upsert({
-    where: { id: 'account-sales' },
+  const sales = await prisma.account.upsert({
+    where: { id: 'sales-001' },
     update: {},
     create: {
-      id: 'account-sales',
+      id: 'sales-001',
       name: 'المبيعات',
       code: '401',
       type: 'REVENUE',
@@ -53,40 +53,52 @@ async function main() {
     },
   });
 
-  const customer = await prisma.customer.upsert({
-    where: { id: 'customer-1' },
+  const expense = await prisma.account.upsert({
+    where: { id: 'expense-001' },
     update: {},
     create: {
-      id: 'customer-1',
-      name: 'شركة الرؤية',
-      phone: '0551234567',
-      email: 'sales@vision.sa',
+      id: 'expense-001',
+      name: 'المصروفات',
+      code: '501',
+      type: 'EXPENSE',
+      companyId: company.id,
+    },
+  });
+
+  const customer = await prisma.customer.upsert({
+    where: { id: 'cust-001' },
+    update: {},
+    create: {
+      id: 'cust-001',
+      name: 'شركة الهدى',
+      phone: '0500000001',
+      email: 'info@alhuda.com',
       companyId: company.id,
     },
   });
 
   const supplier = await prisma.supplier.upsert({
-    where: { id: 'supplier-1' },
+    where: { id: 'supp-001' },
     update: {},
     create: {
-      id: 'supplier-1',
-      name: 'شركة النور للمواد',
-      phone: '0557654321',
-      email: 'info@noor-materials.sa',
+      id: 'supp-001',
+      name: 'شركة النور',
+      phone: '0500000002',
+      email: 'info@alnoor.com',
       companyId: company.id,
     },
   });
 
   const product = await prisma.product.upsert({
-    where: { id: 'product-1' },
+    where: { id: 'prod-001' },
     update: {},
     create: {
-      id: 'product-1',
-      name: 'خدمة استضافة',
-      sku: 'HOST-001',
+      id: 'prod-001',
+      name: 'خدمة استشارية',
+      sku: 'SRV-001',
       category: 'خدمات',
-      price: 250,
-      stock: 25,
+      price: 1200,
+      stock: 20,
       companyId: company.id,
     },
   });
@@ -101,44 +113,43 @@ async function main() {
       issueDate: new Date(),
       dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       status: 'PAID',
-      subtotal: 250,
-      tax: 25,
-      total: 275,
-      notes: 'فاتورة أولية لنظام استضافة',
+      subtotal: 1200,
+      tax: 180,
+      total: 1380,
+      notes: 'فاتورة تجريبية لنظام ميزان المحاسبة',
       items: {
-        create: [
-          {
-            description: 'خدمة استضافة',
-            quantity: 1,
-            unitPrice: 250,
-            total: 250,
-            productId: product.id,
-          },
-        ],
+        create: [{
+          description: 'خدمة استشارية',
+          quantity: 1,
+          unitPrice: 1200,
+          total: 1200,
+          productId: product.id,
+        }],
       },
     },
   });
 
   await prisma.payment.upsert({
-    where: { id: 'payment-1' },
+    where: { id: 'pay-001' },
     update: {},
     create: {
-      id: 'payment-1',
+      id: 'pay-001',
       invoiceId: invoice.id,
-      amount: 275,
+      amount: 1380,
       method: 'BANK',
-      reference: 'BANK-REF-001',
+      reference: 'BANK-1254',
+      paymentDate: new Date(),
     },
   });
 
   await prisma.expense.upsert({
-    where: { id: 'expense-1' },
+    where: { id: 'exp-001' },
     update: {},
     create: {
-      id: 'expense-1',
-      description: 'شراء مستلزمات مكتبية',
+      id: 'exp-001',
+      description: 'شراء مستلزمات مكتب',
       category: 'مشتريات',
-      amount: 2200,
+      amount: 850,
       expenseDate: new Date(),
       supplierId: supplier.id,
       companyId: company.id,
@@ -154,20 +165,20 @@ async function main() {
       entryDate: new Date(),
       lines: {
         create: [
-          { accountId: accountCash.id, debit: 275, description: 'إيداع نقدي' },
-          { accountId: accountSales.id, credit: 275, description: 'إيراد مبيعات' },
+          { accountId: cash.id, debit: 1380, description: 'إيداع نقدي' },
+          { accountId: sales.id, credit: 1380, description: 'إيراد مبيعات' },
         ],
       },
     },
   });
 
   await prisma.setting.upsert({
-    where: { id: 'setting-1' },
+    where: { id: 'set-001' },
     update: {},
     create: {
-      id: 'setting-1',
+      id: 'set-001',
       key: 'company_name',
-      value: company.name,
+      value: 'شركة ميزان المحاسبة',
       companyId: company.id,
     },
   });
