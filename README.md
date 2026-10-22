@@ -1,2 +1,52 @@
-# accounting-system
-Integrated accounting management system with dashboard, invoices, expenses, journals, reports, and deployment-ready setup.
+# نظام محاسبة متكامل
+
+هذا المشروع هو نظام محاسبة كامل لاستخدامه في الشركات الصغيرة والمتوسطة، ويشمل:
+- لوحة تحكم مالية
+- إدارة العملاء والموردين
+- إدارة المنتجات والخدمات
+- الفواتير
+- دفتر اليومية
+- التقارير والإحصائيات
+- إعدادات النظام
+
+## التقنيات
+- Next.js 14
+- TypeScript
+- Tailwind CSS
+- Prisma ORM
+- SQLite
+
+## التشغيل
+
+1. تثبيت الحزم:
+```bash
+npm install
+```
+
+2. إعداد قاعدة البيانات:
+```bash
+npx prisma db push
+npm run db:seed
+```
+
+3. تشغيل التطبيق:
+```bash
+npm run dev
+```
+
+4. الوصول إلى التطبيق:
+```bash
+http://localhost:3000
+```
+
+## البناء للإنتاج
+```bash
+npm run build
+npm run start
+```
+
+## الهيكل الأساسي
+- `app/` : الصفحات والواجهة
+- `components/` : مكونات واجهة المستخدم
+- `lib/` : منطق التطبيق والبيانات
+- `prisma/` : مخطط قاعدة البيانات وبذرة البيانات

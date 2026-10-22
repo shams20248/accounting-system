@@ -1,0 +1,188 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Currency {
+  SAR
+  USD
+  AED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  PAID
+  PARTIAL
+  UNPAID
+}
+
+enum PaymentMethod {
+  CASH
+  BANK
+  CARD
+  TRANSFER
+}
+
+model Company {
+  id          String   @id @default(cuid())
+  name        String
+  taxNumber   String?
+  currency    Currency @default(SAR)
+  phone       String?
+  email       String?
+  address     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  users       User[]
+  customers   Customer[]
+  suppliers   Supplier[]
+  products    Product[]
+  accounts    Account[]
+  invoices    Invoice[]
+  expenses    Expense[]
+  settings    Setting[]
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("ADMIN")
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Customer {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String?
+  email     String?
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id])
+  invoices  Invoice[]
+  createdAt DateTime @default(now())
+}
+
+model Supplier {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String?
+  email     String?
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id])
+  expenses  Expense[]
+  createdAt DateTime @default(now())
+}
+
+model Product {
+  id        String        @id @default(cuid())
+  name      String
+  sku       String?
+  category  String?
+  price     Float
+  stock     Float         @default(0)
+  companyId String
+  company   Company       @relation(fields: [companyId], references: [id])
+  invoiceItems InvoiceItem[]
+  createdAt DateTime      @default(now())
+}
+
+model Account {
+  id        String   @id @default(cuid())
+  name      String
+  code      String
+  type      String
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id])
+  journalLines JournalEntryLine[]
+  createdAt DateTime @default(now())
+}
+
+model Invoice {
+  id          String         @id @default(cuid())
+  number      String         @unique
+  customerId  String
+  customer    Customer       @relation(fields: [customerId], references: [id])
+  companyId   String
+  company     Company        @relation(fields: [companyId], references: [id])
+  issueDate   DateTime
+  dueDate     DateTime?
+  status      InvoiceStatus  @default(UNPAID)
+  subtotal    Float
+  tax         Float          @default(0)
+  total       Float
+  notes       String?
+  items       InvoiceItem[]
+  payments    Payment[]
+  createdAt   DateTime       @default(now())
+}
+
+model InvoiceItem {
+  id        String   @id @default(cuid())
+  invoiceId  String
+  invoice    Invoice  @relation(fields: [invoiceId], references: [id])
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id])
+  description String
+  quantity  Float
+  unitPrice Float
+  total     Float
+}
+
+model Payment {
+  id          String   @id @default(cuid())
+  invoiceId    String
+  invoice      Invoice  @relation(fields: [invoiceId], references: [id])
+  amount       Float
+  method       PaymentMethod @default(CASH)
+  reference    String?
+  paymentDate  DateTime @default(now())
+}
+
+model Expense {
+  id          String   @id @default(cuid())
+  description String
+  category    String
+  amount      Float
+  expenseDate DateTime
+  supplierId  String?
+  supplier    Supplier? @relation(fields: [supplierId], references: [id])
+  companyId   String
+  company     Company  @relation(fields: [companyId], references: [id])
+  createdAt   DateTime @default(now())
+}
+
+model JournalEntry {
+  id          String   @id @default(cuid())
+  number      String   @unique
+  description String
+  entryDate   DateTime
+  lines       JournalEntryLine[]
+  createdAt   DateTime @default(now())
+}
+
+model JournalEntryLine {
+  id            String        @id @default(cuid())
+  journalEntryId String
+  journalEntry  JournalEntry  @relation(fields: [journalEntryId], references: [id])
+  accountId     String
+  account       Account       @relation(fields: [accountId], references: [id])
+  debit         Float         @default(0)
+  credit        Float         @default(0)
+  description   String?
+}
+
+model Setting {
+  id        String   @id @default(cuid())
+  key       String
+  value     String
+  companyId String
+  company   Company  @relation(fields: [companyId], references: [id])
+  createdAt DateTime @default(now())
+}
