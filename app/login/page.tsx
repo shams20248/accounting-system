@@ -1,10 +1,3 @@
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'تسجيل الدخول | ميزان المحاسبة',
-  description: 'تسجيل الدخول إلى نظام ميزان المحاسبة',
-};
-
 export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-100 p-6">
@@ -18,19 +11,11 @@ export default function LoginPage() {
         <form className="space-y-4">
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">البريد الإلكتروني</label>
-            <input
-              type="email"
-              defaultValue="admin@mizan-accounting.com"
-              className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-right outline-none ring-0 transition focus:border-blue-500"
-            />
+            <input defaultValue="admin@mizan-accounting.com" className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-right outline-none transition focus:border-blue-500" />
           </div>
           <div>
             <label className="mb-2 block text-sm font-medium text-slate-700">كلمة المرور</label>
-            <input
-              type="password"
-              defaultValue="password123"
-              className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-right outline-none ring-0 transition focus:border-blue-500"
-            />
+            <input type="password" defaultValue="password123" className="w-full rounded-xl border border-slate-300 bg-slate-50 px-3 py-2.5 text-right outline-none transition focus:border-blue-500" />
           </div>
           <button type="submit" className="w-full rounded-xl bg-slate-900 px-4 py-3 font-medium text-white transition hover:bg-slate-800">
             تسجيل الدخول

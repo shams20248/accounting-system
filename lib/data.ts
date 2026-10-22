@@ -8,6 +8,14 @@ export type DashboardMetric = {
   performance: string;
 };
 
+export type RecentTransaction = {
+  id: number;
+  description: string;
+  date: string;
+  amount: string;
+  type: 'إيراد' | 'مصروف';
+};
+
 export async function getDashboardMetrics(): Promise<DashboardMetric> {
   return {
     revenue: '245,000 ر.س',
@@ -19,14 +27,6 @@ export async function getDashboardMetrics(): Promise<DashboardMetric> {
     performance: '68%',
   };
 }
-
-export type RecentTransaction = {
-  id: number;
-  description: string;
-  date: string;
-  amount: string;
-  type: 'إيراد' | 'مصروف';
-};
 
 export async function getRecentTransactions(): Promise<RecentTransaction[]> {
   return [

@@ -16,10 +16,20 @@ body {
   background: #f1f5f9;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 a {
   text-decoration: none;
 }
 
-button, input {
+button,
+input,
+select {
   font: inherit;
+}
+
+.shadow-soft {
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
 }
